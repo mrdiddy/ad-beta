@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Playlist</title>
+    <title>Now Playing</title> <!-- Change this to a more general title -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,7 +40,7 @@
 <body>
 
     <header>
-        <h1 id="nowPlaying"></h1> <!-- Removed "My Playlist" from header -->
+        <h1 id="nowPlaying">Now Playing</h1> <!-- This is just for display on the page -->
     </header>
 
     <main>
@@ -54,15 +54,11 @@
                 <input type="range" id="progressBar" value="0" step="1" min="0">
                 <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
             </div>
-            <div id="volumeContainer">
-                <label for="volumeControl">Volume:</label>
-                <input type="range" id="volumeControl" value="100" min="0" max="100">
-            </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 My Playlist App</p>
+        <p>&copy; 2dasdasdasdp</p>
     </footer>
 
     <script>
@@ -71,7 +67,6 @@
         const progressBar = document.getElementById('progressBar');
         const currentTimeDisplay = document.getElementById('currentTime');
         const durationDisplay = document.getElementById('duration');
-        const volumeControl = document.getElementById('volumeControl');
         const nowPlaying = document.getElementById('nowPlaying');
 
         const trackList = [
@@ -107,15 +102,15 @@
             progressBar.value = currentTime;
             currentTimeDisplay.textContent = formatTime(currentTime);
             durationDisplay.textContent = formatTime(duration);
-            nowPlaying.textContent = trackList[currentTrackIndex].replace('.mp3', ''); // Update now playing text
 
-            // Set Media Session metadata
+            // Update media session metadata for control center
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: trackList[currentTrackIndex].replace('.mp3', ''),
-                    artist: 'Your Artist Name', // You can change this to the actual artist name
-                    album: 'Your Album Name' // You can change this to the actual album name
+                    title: trackList[currentTrackIndex].replace('.mp3', ''), // Current track title
+                    artist: 'Your Artist Name', // Optional
+                    album: 'Your Album Name' // Optional
                 });
+                nowPlaying.textContent = `Now Playing: ${trackList[currentTrackIndex].replace('.mp3', '')}`;
             }
         }
 
@@ -150,13 +145,8 @@
             }
         }
 
-        function adjustVolume() {
-            audioPlayer.volume = volumeControl.value / 100;
-        }
-
         audioPlayer.addEventListener('ended', skipTrack);
         audioPlayer.addEventListener('timeupdate', updateProgressBar);
-        volumeControl.addEventListener('input', adjustVolume);
 
         createTrackElements();
 
