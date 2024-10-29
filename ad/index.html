@@ -4,13 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Playlist</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+        }
+        .playlist {
+            margin-top: 20px;
+        }
+        .track {
+            margin: 10px 0;
+        }
+        .play-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #progressContainer {
+            margin: 10px 0;
+        }
+        #volumeContainer {
+            margin: 10px 0;
+        }
+    </style>
     <audio id="audioPlayer"></audio>
 </head>
 <body>
 
     <header>
-        <h1>My Playlist</h1>
+        <h1 id="nowPlaying">My Playlist</h1>
     </header>
 
     <main>
@@ -42,8 +75,8 @@
         const currentTimeDisplay = document.getElementById('currentTime');
         const durationDisplay = document.getElementById('duration');
         const volumeControl = document.getElementById('volumeControl');
+        const nowPlaying = document.getElementById('nowPlaying');
 
-        // List of all your songs in the songs folder
         const trackList = [
             'BedChem.mp3',
             'BIRDSOFAFEATHER.mp3',
@@ -61,48 +94,42 @@
 
         let currentTrackIndex = 0;
 
-        // Function to create track elements
         function createTrackElements() {
             trackList.forEach(song => {
+                const trackName = song.replace('.mp3', ''); // Remove the .mp3 extension
                 const trackDiv = document.createElement('div');
                 trackDiv.classList.add('track');
-                trackDiv.innerHTML = `<span class="track-name">${song}</span>`;
+                trackDiv.innerHTML = `<span class="track-name">${trackName}</span>`;
                 trackListElement.appendChild(trackDiv);
             });
         }
 
-        // Function to update progress bar
         function updateProgressBar() {
             const { currentTime, duration } = audioPlayer;
-            progressBar.max = duration || 0; // Set max value to duration
-            progressBar.value = currentTime; // Update progress bar value
-
-            // Update current time display
+            progressBar.max = duration || 0;
+            progressBar.value = currentTime;
             currentTimeDisplay.textContent = formatTime(currentTime);
             durationDisplay.textContent = formatTime(duration);
+            nowPlaying.textContent = `Now Playing: ${trackList[currentTrackIndex].replace('.mp3', '')}`; // Update now playing text
         }
 
-        // Function to format time as mm:ss
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${minutes}:${secs < 10 ? '0' + secs : secs}`;
         }
 
-        // Function to play all songs in the playlist
         function playAllTracks() {
-            playTrack(currentTrackIndex); // Start playing the first track
+            playTrack(currentTrackIndex);
         }
 
-        // Function to play the current track
         function playTrack(index) {
             if (index < trackList.length) {
-                audioPlayer.src = `../songs/${trackList[index]}`; // Adjust path to the songs folder
+                audioPlayer.src = `../songs/${trackList[index]}`;
                 audioPlayer.play();
             }
         }
 
-        // Skip to the next track
         function skipTrack() {
             if (currentTrackIndex < trackList.length - 1) {
                 currentTrackIndex++;
@@ -110,7 +137,6 @@
             }
         }
 
-        // Rewind to the previous track
         function rewindTrack() {
             if (currentTrackIndex > 0) {
                 currentTrackIndex--;
@@ -118,25 +144,21 @@
             }
         }
 
-        // Function to adjust volume
         function adjustVolume() {
-            audioPlayer.volume = volumeControl.value / 100; // Set volume (0 to 1)
+            audioPlayer.volume = volumeControl.value / 100;
         }
 
-        // Event listeners
-        audioPlayer.addEventListener('ended', skipTrack); // Play next track when current one ends
-        audioPlayer.addEventListener('timeupdate', updateProgressBar); // Update progress bar as the song plays
-        volumeControl.addEventListener('input', adjustVolume); // Adjust volume when slider is moved
+        audioPlayer.addEventListener('ended', skipTrack);
+        audioPlayer.addEventListener('timeupdate', updateProgressBar);
+        volumeControl.addEventListener('input', adjustVolume);
 
-        // Initialize track elements on page load
         createTrackElements();
 
-        // Add event listeners for buttons
         document.getElementById('playAllButton').addEventListener('click', playAllTracks);
         document.getElementById('skipButton').addEventListener('click', skipTrack);
         document.getElementById('rewindButton').addEventListener('click', rewindTrack);
         progressBar.addEventListener('input', () => {
-            audioPlayer.currentTime = progressBar.value; // Set audio player current time based on progress bar value
+            audioPlayer.currentTime = progressBar.value;
         });
     </script>
 </body>
