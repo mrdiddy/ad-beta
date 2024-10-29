@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>101020021010102_929X10202010101010101094211001</title> <!-- Change this to a more general title -->
+    <title>My Playlist</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,7 +40,7 @@
 <body>
 
     <header>
-        <h1 id="nowPlaying">101020021010102_929X10202010101010101094211001</h1> <!-- This is just for display on the page -->
+        <h1 id="nowPlaying">My Playlist</h1>
     </header>
 
     <main>
@@ -58,7 +58,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2dasdasdasdp</p>
+        <p>&copy; 2024 My Playlist App</p>
     </footer>
 
     <script>
@@ -102,15 +102,20 @@
             progressBar.value = currentTime;
             currentTimeDisplay.textContent = formatTime(currentTime);
             durationDisplay.textContent = formatTime(duration);
+            nowPlaying.textContent = trackList[currentTrackIndex].replace('.mp3', ''); // Update now playing text
 
-            // Update media session metadata for control center
+            // Update media session metadata
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: trackList[currentTrackIndex].replace('.mp3', ''), // Current track title
-                    artist: 'Your Artist Name', // Optional
-                    album: 'Your Album Name' // Optional
+                    title: trackList[currentTrackIndex].replace('.mp3', ''),
+                    artist: 'Your Artist Name', // Replace with your artist name
+                    album: 'Your Album Name', // Replace with your album name
+                    artwork: [
+                        { src: 'https://cdn.discordapp.com/attachments/1297051097457889335/1300679873123061821/funny.png?ex=6721b807&is=67206687&hm=b43409ae4df20d00384cc59ee967f40376ac0ae6ca442e130c44a13aa9275290&', sizes: '96x96', type: 'image/png' },
+                        { src: 'https://cdn.discordapp.com/attachments/1297051097457889335/1300679873123061821/funny.png?ex=6721b807&is=67206687&hm=b43409ae4df20d00384cc59ee967f40376ac0ae6ca442e130c44a13aa9275290&', sizes: '192x192', type: 'image/png' },
+                        { src: 'https://cdn.discordapp.com/attachments/1297051097457889335/1300679873123061821/funny.png?ex=6721b807&is=67206687&hm=b43409ae4df20d00384cc59ee967f40376ac0ae6ca442e130c44a13aa9275290&', sizes: '512x512', type: 'image/png' }
+                    ]
                 });
-                nowPlaying.textContent = `Now Playing: ${trackList[currentTrackIndex].replace('.mp3', '')}`;
             }
         }
 
