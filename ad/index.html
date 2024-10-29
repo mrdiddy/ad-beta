@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Playlist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <audio id="audioPlayer"></audio>
+</head>
+<body>
+
+    <header>
+        <h1>My Playlist</h1>
+    </header>
+
+    <main>
+        <section class="playlist">
+            <h2>Your Favorite Tracks</h2>
+            <div id="trackList"></div>
+            <button id="playAllButton" class="play-button">Play All</button>
+            <button id="skipButton" class="play-button">Skip</button>
+            <button id="rewindButton" class="play-button">Rewind</button>
+            <div id="progressContainer">
+                <input type="range" id="progressBar" value="0" step="1" min="0">
+                <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+            </div>
+            <div id="volumeContainer">
+                <label for="volumeControl">Volume:</label>
+                <input type="range" id="volumeControl" value="100" min="0" max="100">
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Playlist App</p>
+    </footer>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const trackListElement = document.getElementById('trackList');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const durationDisplay = document.getElementById('duration');
+        const volumeControl = document.getElementById('volumeControl');
+
+        // List of all your songs in the songs folder
+        const trackList = [
+            'BedChem.mp3',
+            'BIRDSOFAFEATHER.mp3',
+            'cardigan.mp3',
+            'DieWithASmile.mp3',
+            'Espresso.mp3',
+            'MoonLitFloor.mp3',
+            'PleasePleasePlease.mp3',
+            'pocketlocket.mp3',
+            'rahtahtah.mp3',
+            'seeyouagain.mp3',
+            'ThickOfIt.mp3',
+            'YouBelongWithMe.mp3'
+        ];
+
+        let currentTrackIndex = 0;
+
+        // Function to create track elements
+        function createTrackElements() {
+            trackList.forEach(song => {
+                const trackDiv = document.createElement('div');
+                trackDiv.classList.add('track');
+                trackDiv.innerHTML = `<span class="track-name">${song}</span>`;
+                trackListElement.appendChild(trackDiv);
+            });
+        }
+
+        // Function to update progress bar
+        function updateProgressBar() {
+            const { currentTime, duration } = audioPlayer;
+            progressBar.max = duration || 0; // Set max value to duration
+            progressBar.value = currentTime; // Update progress bar value
+
+            // Update current time display
+            currentTimeDisplay.textContent = formatTime(currentTime);
+            durationDisplay.textContent = formatTime(duration);
+        }
+
+        // Function to format time as mm:ss
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' + secs : secs}`;
+        }
+
+        // Function to play all songs in the playlist
+        function playAllTracks() {
+            playTrack(currentTrackIndex); // Start playing the first track
+        }
+
+        // Function to play the current track
+        function playTrack(index) {
+            if (index < trackList.length) {
+                audioPlayer.src = `../songs/${trackList[index]}`; // Adjust path to the songs folder
+                audioPlayer.play();
+            }
+        }
+
+        // Skip to the next track
+        function skipTrack() {
+            if (currentTrackIndex < trackList.length - 1) {
+                currentTrackIndex++;
+                playTrack(currentTrackIndex);
+            }
+        }
+
+        // Rewind to the previous track
+        function rewindTrack() {
+            if (currentTrackIndex > 0) {
+                currentTrackIndex--;
+                playTrack(currentTrackIndex);
+            }
+        }
+
+        // Function to adjust volume
+        function adjustVolume() {
+            audioPlayer.volume = volumeControl.value / 100; // Set volume (0 to 1)
+        }
+
+        // Event listeners
+        audioPlayer.addEventListener('ended', skipTrack); // Play next track when current one ends
+        audioPlayer.addEventListener('timeupdate', updateProgressBar); // Update progress bar as the song plays
+        volumeControl.addEventListener('input', adjustVolume); // Adjust volume when slider is moved
+
+        // Initialize track elements on page load
+        createTrackElements();
+
+        // Add event listeners for buttons
+        document.getElementById('playAllButton').addEventListener('click', playAllTracks);
+        document.getElementById('skipButton').addEventListener('click', skipTrack);
+        document.getElementById('rewindButton').addEventListener('click', rewindTrack);
+        progressBar.addEventListener('input', () => {
+            audioPlayer.currentTime = progressBar.value; // Set audio player current time based on progress bar value
+        });
+    </script>
+</body>
+</html>
