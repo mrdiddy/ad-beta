@@ -40,7 +40,7 @@
 <body>
 
     <header>
-        <h1 id="nowPlaying">Now Playing: </h1> <!-- Header updated to display current track -->
+        <h1 id="nowPlaying"></h1> <!-- Removed "My Playlist" from header -->
     </header>
 
     <main>
@@ -107,7 +107,16 @@
             progressBar.value = currentTime;
             currentTimeDisplay.textContent = formatTime(currentTime);
             durationDisplay.textContent = formatTime(duration);
-            nowPlaying.textContent = `Now Playing: ${trackList[currentTrackIndex].replace('.mp3', '')}`; // Update now playing text
+            nowPlaying.textContent = trackList[currentTrackIndex].replace('.mp3', ''); // Update now playing text
+
+            // Set Media Session metadata
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: trackList[currentTrackIndex].replace('.mp3', ''),
+                    artist: 'Your Artist Name', // You can change this to the actual artist name
+                    album: 'Your Album Name' // You can change this to the actual album name
+                });
+            }
         }
 
         function formatTime(seconds) {
